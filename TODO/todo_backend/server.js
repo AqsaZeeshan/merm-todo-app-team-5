@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb://admin:admin123@ac-6prghdw-shard-00-00.zm2x6s5.mongodb.net:27017,ac-6prghdw-shard-00-01.zm2x6s5.mongodb.net:27017,ac-6prghdw-shard-00-02.zm2x6s5.mongodb.net:27017/todo?ssl=true&replicaSet=atlas-13p5s9-shard-0&authSource=admin&appName=punishmentmiffy')
+mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://admin:admin123@punishmentmiffy.zm2x6s5.mongodb.net/todo?retryWrites=true&w=majority&appName=punishmentmiffy')
 
 .then(() => console.log('MongoDb connected'))
 .catch(err => console.log(err));

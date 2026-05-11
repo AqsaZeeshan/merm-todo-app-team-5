@@ -4,19 +4,21 @@ import './App.css';
 import axios from 'axios';
 import { BsCircleFill, BsFillCheckCircleFill, BsFillTrashFill, BsPencil } from 'react-icons/bs';
 
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const Home = () => {
     const [todos, setTodos] = useState([]);
     const [updatetask, setUpdatetask] = useState('');
     const [taskid, setTaskid] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:5000/get')
+        axios.get(`${API}/get`)
             .then(result => setTodos(result.data))
             .catch(err => console.log(err));
     }, []);
 
     const edit = (id) => {
-        axios.put(`http://localhost:5000/edit/${id}`)
+        axios.put(`${API}/edit/${id}`)
             .then(result => {
                 console.log(result.data);
                 const updatedTodos = todos.map(todo => {
@@ -31,7 +33,7 @@ const Home = () => {
     };
 
     const Update = (id, updatedTask) => {
-        axios.put(`http://localhost:5000/update/${id}`, { task: updatedTask })
+        axios.put(`${API}/update/${id}`, { task: updatedTask })
             .then(result => {
                 console.log(result.data);
                 const updatedTodos = todos.map(todo => {
@@ -43,13 +45,13 @@ const Home = () => {
                 setTodos(updatedTodos);
                 setTaskid('');
                 setUpdatetask('');
-                Window.location.reload();
+                window.location.reload();
             })
             .catch(err => console.log(err));
     };
 
     const Hdelete = (id) => {
-        axios.delete(`http://localhost:5000/delete/${id}`)
+        axios.delete(`${API}/delete/${id}`)
             .then(result => {
                 console.log(result.data);
                 const updatedTodos = todos.filter(todo => todo._id !== id);
