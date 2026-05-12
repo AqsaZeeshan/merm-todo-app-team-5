@@ -1,37 +1,20 @@
 version: '3.8'
 
 services:
-
   backend:
-    build: ./todo_backend
-    container_name: todo_backend
-    restart: always
+    build:
+      context: ./todo_backend
+    container_name: backend
     ports:
       - "5000:5000"
-    environment:
-      - MONGO_URI=mongodb+srv://admin:admin123@punishmentmiffy.zm2x6s5.mongodb.net/todo?retryWrites=true&w=majority&appName=punishmentmiffy
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
-    networks:
-      - todo-network
+    restart: always
 
   frontend:
-    build: ./todo_frontend
-    container_name: todo_frontend
-    restart: always
+    build:
+      context: ./todo_frontend
+    container_name: frontend
     ports:
       - "3000:3000"
-    environment:
-      - REACT_APP_API_URL=http://localhost:5000
     depends_on:
       - backend
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
-    networks:
-      - todo-network
-
-networks:
-  todo-network:
-    driver: bridge
+    restart: always
