@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import './App.css';
 import axios from 'axios';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
 const Create = () => {
     const [task, setTask] = useState('');
 
     const createTask = () => {
-        axios.post(`${API}/add`, { task: task.trim() })
+        axios.post('http://localhost:5000/add', { task: task.trim() })
             .then(result => {
                 console.log(result.data);
                 window.location.reload();
@@ -19,7 +17,7 @@ const Create = () => {
 
     return (
         <main>
-            <h1>Aqsa and Arsha's Amazing Devops Todo List</h1>
+            <h1>Todo List</h1>
             <div className='create-form'>
                 <input
                     type='text'

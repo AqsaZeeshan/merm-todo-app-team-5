@@ -7,11 +7,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://admin:admin123@punishmentmiffy.zm2x6s5.mongodb.net/todo?retryWrites=true&w=majority&appName=punishmentmiffy')
-
-.then(() => console.log('MongoDb connected'))
-.catch(err => console.log(err));
-
+mongoose.connect('mongodb://127.0.0.1:27017/TODO',
+    console.log('MongoDB connected')
+)
 
 app.listen(5000,
     console.log('Server listening on port: 5000')
