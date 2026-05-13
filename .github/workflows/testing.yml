@@ -27,12 +27,12 @@ jobs:
 
       - name: Build Backend Docker Image
         run: |
-          docker build -t todo-backend ./todo_backend
+          docker build -t todo-backend ./TODO/todo_backend
           docker tag todo-backend:latest 373516853296.dkr.ecr.eu-north-1.amazonaws.com/todo-backend:latest
 
       - name: Build Frontend Docker Image
         run: |
-          docker build -t todo-frontend ./todo_frontend
+          docker build -t todo-frontend ./TODO/todo_frontend
           docker tag todo-frontend:latest 373516853296.dkr.ecr.eu-north-1.amazonaws.com/todo-frontend:latest
 
       - name: Push Backend Docker Image
