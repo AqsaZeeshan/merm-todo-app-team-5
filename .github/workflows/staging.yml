@@ -1,0 +1,61 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Backend Docker Image
+        run: |
+          docker build -t todo-backend ./TODO/todo_backend
+          docker tag todo-backend:latest 373516853296.dkr.ecr.eu-north-1.amazonaws.com/todo-backend:latest
+
+      - name: Build Frontend Docker Image
+        run: |
+          docker build -t todo-frontend ./TODO/todo_frontend
+          docker tag todo-frontend:latest 373516853296.dkr.ecr.eu-north-1.amazonaws.com/todo-frontend:latest
+
+      - name: Push Backend Docker Image
+        run: |
+          docker push 373516853296.dkr.ecr.eu-north-1.amazonaws.com/todo-backend:latest
+
+      - name: Push Frontend Docker Image
+        run: |
+          docker push 373516853296.dkr.ecr.eu-north-1.amazonaws.com/todo-frontend:latest
+
+      - name: Deploy Application on Staging EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH }}
+          script: |
+            cd ~/merm-todo-app-team-5/TODO
+
+            aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 373516853296.dkr.ecr.eu-north-1.amazonaws.com
+
+            docker-compose pull
+
+            docker-compose down
+
+            docker-compose up -d
